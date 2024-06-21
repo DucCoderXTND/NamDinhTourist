@@ -1,6 +1,6 @@
 ﻿namespace TND.Domain.Entities
 {
-    public class Amenity
+    public class Amenity : EntityBase
     {
         public string Name { get; set; }
         public string? Description { get; set; }
