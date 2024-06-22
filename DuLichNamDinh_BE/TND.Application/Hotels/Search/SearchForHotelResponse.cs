@@ -68,8 +68,8 @@ namespace TND.Application.Hotels.Search
             SearchForHotelsQuery query)
         {
             return h => h.RoomClasses.Any(rc =>
-            rc.AdultsCapacity >= query.NumberOfAdults
-            && rc.ChildrenCapacity >= query.NumberOfChildren);
+                rc.AdultsCapacity >= query.NumberOfAdults
+                && rc.ChildrenCapacity >= query.NumberOfChildren);
         }
 
         private static Expression<Func<Hotel, bool>> CreatePriceRangeExpression(
@@ -77,38 +77,53 @@ namespace TND.Application.Hotels.Search
         {
             Expression<Func<Hotel, bool>> greaterThenMinPriceExpression =
                 query.MinPrice.HasValue
-                 ? h => h.RoomClasses.Any(rc => rc.PricePerNight >= query.MinPrice)
-                 : _ => true;
+                ? h => h.RoomClasses.Any(rc => rc.PricePerNight >= query.MinPrice)
+                : _ => true;
 
-            Expression<Func<Hotel, bool>> lessThenMaxPriceExpression =
-               query.MaxPrice.HasValue
+            Expression<Func<Hotel, bool>> lessThenMinPriceExpression =
+                query.MaxPrice.HasValue
                 ? h => h.RoomClasses.Any(rc => rc.PricePerNight <= query.MaxPrice)
                 : _ => true;
 
-            return greaterThenMinPriceExpression.And(lessThenMaxPriceExpression);
+            return greaterThenMinPriceExpression.And(lessThenMinPriceExpression);
 
         }
 
         private static Expression<Func<Hotel, bool>> CreateAmenitiesExpression(SearchForHotelsQuery query)
         {
-            if (query.Amenities.Any())
+            #region giải thích truy vấn
+            //Giả sử query.Amenities chứa các tiện nghi["Wi-Fi", "Breakfast"].
+            //Và bạn có một danh sách khách sạn với các RoomClasses như sau: 
+            //    Hotel A: ["Standard"(có Wi - Fi), "Deluxe"(có Breakfast)] 
+            //    Hotel B: ["Standard"(có Wi - Fi), "Economy"(không có Breakfast)] 
+            //    Hotel C: ["Suite"(có Wi - Fi và Breakfast)]
+            //Kết quả sẽ là: 
+            //    Hotel A: Có RoomClass "Deluxe" với tiện nghi "Breakfast" và "Standard" với tiện nghi "Wi-Fi", nên thỏa mãn điều kiện.
+            //    Hotel B: Chỉ có RoomClass "Standard" với tiện nghi "Wi-Fi", không thỏa mãn điều kiện Breakfast.
+            //    Hotel C: Có RoomClass "Suite" với cả hai tiện nghi "Wi-Fi" và "Breakfast", nên thỏa mãn điều kiện.
+            //Do đó, chỉ có Hotel A và Hotel C sẽ được chọn trong kết quả cuối cùng của truy vấn.
+            #endregion
+
+            if (query.Amenities.Count() > 0)
             {
                 return h => query.Amenities.All(amenityId =>
-                            h.RoomClasses.Any(rc => rc.Amenities.Any(a => a.Id == amenityId)));
+                    h.RoomClasses.Any(rc => rc.Amenities.Any(a => a.Id == amenityId)));
             }
-
             return _ => true;
         }
 
         private static Expression<Func<Hotel, bool>> CreateAvailableRoomsExpression(
             SearchForHotelsQuery query)
         {
+
+            //Điều kiện r.Bookings.all(...) sẽ chỉ đếm những phòng mà
+            //tất cả các booking trong đó không trùng với khoảng thời gian mới.
             return h => h.RoomClasses.Any(rc => rc.Rooms.Count(r =>
-                !r.Bookings.Any(b => query.CheckOutDate <= b.CheckInDateUtc
-                || query.CheckInDate >= b.CheckOutDateUtc)) >= query.NumberOfRooms);
+                r.Bookings.All(b => query.CheckInDate >= b.CheckOutDateUtc
+                || query.CheckOutDate <= b.CheckInDateUtc)) >= query.NumberOfRooms);
         }
 
-        private static Expression<Func<Hotel, bool>> 
+        private static Expression<Func<Hotel, bool>>
             CreateMinStarRatingExpression(SearchForHotelsQuery query)
         {
             if (query.MinStarRating.HasValue)
