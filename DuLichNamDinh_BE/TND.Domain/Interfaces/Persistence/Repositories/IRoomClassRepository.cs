@@ -1,10 +1,13 @@
-﻿using TND.Domain.Entities;
+﻿using System.Linq.Expressions;
+using TND.Domain.Entities;
 using TND.Domain.Models;
 
 namespace TND.Domain.Interfaces.Persistence.Repositories
 {
     public interface IRoomClassRepository
     {
+        //Task<bool> ExistsAsync(Expression<Func<RoomClass, bool>> predicate, 
+        //    CancellationToken cancellationToken = default);
         Task<RoomClass?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<bool> ExistsByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<RoomClass> CreateAsync(RoomClass roomClass, CancellationToken cancellationToken = default);
