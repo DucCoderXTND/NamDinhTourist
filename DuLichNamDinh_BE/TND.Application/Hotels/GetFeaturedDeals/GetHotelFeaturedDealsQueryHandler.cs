@@ -4,7 +4,7 @@ using TND.Domain.Interfaces.Persistence.Repositories;
 
 namespace TND.Application.Hotels.GetFeaturedDeals
 {
-    public class GetHotelFeaturedDealsQueryHandler : IRequestHandler<GetHotelFeaturedDealsQuery, IEnumerable<GetHotelFeaturedDealResponse>>
+    public class GetHotelFeaturedDealsQueryHandler : IRequestHandler<GetHotelFeaturedDealsQuery, IEnumerable<HotelFeaturedDealResponse>>
     {
         private readonly IHotelRepository _hotelRepository;
         private readonly IRoomClassRepository _roomClassRepository;
@@ -19,7 +19,7 @@ namespace TND.Application.Hotels.GetFeaturedDeals
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<GetHotelFeaturedDealResponse>> Handle(GetHotelFeaturedDealsQuery request, 
+        public async Task<IEnumerable<HotelFeaturedDealResponse>> Handle(GetHotelFeaturedDealsQuery request, 
             CancellationToken cancellationToken)
         {
 
@@ -28,7 +28,7 @@ namespace TND.Application.Hotels.GetFeaturedDeals
             var featuredDeals = await _roomClassRepository.GetFeatureDealsInDifferentHotelsAsync(
                request.Count, cancellationToken);
 
-            return _mapper.Map<IEnumerable<GetHotelFeaturedDealResponse>>(featuredDeals);
+            return _mapper.Map<IEnumerable<HotelFeaturedDealResponse>>(featuredDeals);
         }
     }
 }

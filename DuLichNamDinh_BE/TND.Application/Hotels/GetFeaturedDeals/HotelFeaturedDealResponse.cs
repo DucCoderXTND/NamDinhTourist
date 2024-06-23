@@ -1,6 +1,6 @@
 ﻿namespace TND.Application.Hotels.GetFeaturedDeals
 {
-    public record GetHotelFeaturedDealResponse(
+    public record HotelFeaturedDealResponse(
         Guid Id,
         string Name,
         string RoomClassName,
