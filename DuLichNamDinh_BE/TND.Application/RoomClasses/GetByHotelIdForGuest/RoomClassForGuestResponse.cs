@@ -1,4 +1,5 @@
-﻿using TND.Application.RoomClasses.GetById;
+﻿using TND.Application.Amenities.Common;
+using TND.Application.RoomClasses.GetById;
 using TND.Domain.Enums;
 
 namespace TND.Application.RoomClasses.GetByHotelIdForGuest
@@ -11,7 +12,7 @@ namespace TND.Application.RoomClasses.GetByHotelIdForGuest
         decimal PricePerNight,
         string? Description,
         RoomType RoomType,
-        IEnumerable<Guid> Amenities,
+        IEnumerable<AmenityResponse> Amenities,
         DiscountResponse? ActiveDiscount,
         IEnumerable<string> GalleryUrls);
 }
