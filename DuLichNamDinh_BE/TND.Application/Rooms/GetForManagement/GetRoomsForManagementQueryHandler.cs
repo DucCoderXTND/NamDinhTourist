@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using System.Linq.Expressions;
+using TND.Application.Extensions;
 using TND.Domain.Entities;
 using TND.Domain.Exceptions;
 using TND.Domain.Interfaces.Persistence.Repositories;
@@ -30,7 +31,8 @@ namespace TND.Application.Rooms.GetForManagement
             }
 
             var query = new PaginationQuery<Room>(
-                GetSearchExpression(request.SearchTerm),
+                GetSearchExpression(request.SearchTerm)
+                    .And(r => r.RoomClassId == request.RoomClassId),
                 request.SortOrder ?? Domain.Enums.SortOrder.Ascending,
                 request.SortColumn,
                 request.PageNumber,

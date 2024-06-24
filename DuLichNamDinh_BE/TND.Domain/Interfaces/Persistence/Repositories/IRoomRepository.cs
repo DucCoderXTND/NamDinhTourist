@@ -5,7 +5,7 @@ namespace TND.Domain.Interfaces.Persistence.Repositories
 {
     public interface IRoomRepository
     {
-        Task<PaginatedList<Room>> GetForManagementAsync(PaginationQuery<Room> query,
+        Task<PaginatedList<RoomForManagement>> GetForManagementAsync(PaginationQuery<Room> query,
             CancellationToken cancellationToken = default);
         Task<Room?> GetByIdAsync(Guid roomClassId, Guid id,
             CancellationToken cancellationToken = default);
