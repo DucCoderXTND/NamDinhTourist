@@ -23,6 +23,6 @@ namespace TND.Domain.Interfaces.Persistence.Repositories
             CancellationToken cancellationToken = default);
         Task<Room?> GetByIdWithRoomClassAsync(Guid roomId,
             CancellationToken cancellationToken = default);
-        Task<bool> IsAvailableAsync(Guid roomId, DateOnly dateOnly, CancellationToken cancellationToken = default);
+        Task<bool> IsAvailableAsync(Guid roomId, DateOnly checkInDate, DateOnly checkOutDate, CancellationToken cancellationToken = default);
     }
 }
