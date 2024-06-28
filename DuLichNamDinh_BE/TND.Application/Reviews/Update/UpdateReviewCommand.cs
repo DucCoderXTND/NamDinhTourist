@@ -13,5 +13,5 @@ namespace TND.Application.Reviews.Update
         Guid GuestId,
         Guid HotelId,
         string Content,
-        int Rating) : IRequest<ReviewResponse>;
+        int Rating) : IRequest;
 }

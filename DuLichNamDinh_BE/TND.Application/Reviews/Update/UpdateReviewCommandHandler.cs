@@ -9,7 +9,7 @@ using TND.Domain.Messages;
 
 namespace TND.Application.Reviews.Update
 {
-    public class UpdateReviewCommandHandler : IRequestHandler<UpdateReviewCommand, ReviewResponse>
+    public class UpdateReviewCommandHandler : IRequestHandler<UpdateReviewCommand>
     {
         private readonly IHotelRepository _hotelRepository;
         private readonly IUserRepository _userRepository;
@@ -26,7 +26,7 @@ namespace TND.Application.Reviews.Update
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<ReviewResponse> Handle(UpdateReviewCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateReviewCommand request, CancellationToken cancellationToken)
         {
             if (!await _hotelRepository.ExistsByIdAsync(request.HotelId, cancellationToken))
             {
